@@ -1,0 +1,49 @@
+Dim appXL
+Dim wbSource
+Dim wbDest
+Dim wksSource
+Dim wksDest
+
+On Error Resume Next
+
+	Input = WScript.Arguments.Item(0)								
+	Output = WScript.Arguments.Item(1)
+	
+    	Set appXL = CreateObject("Excel.Application")
+    	appXL.Visible = True                            			
+
+     	Set wbSource = appXL.Workbooks.Open(Input)  
+	Set objsht = wbSource.ActiveSheet					
+	Set objsht = wbSource.Worksheets("Sheet1")
+	
+	objsht.UsedRange.Copy 
+	objsht.Range("A2").Entirecolumn.Copy
+
+	Set wbDest = appXL.Workbooks.Open(Output)		
+	Set objshet = wbDest.ActiveSheet				
+	Set objshet = wbDest.Worksheets("Sheet1")								
+    	objshet.Range("A1").PasteSpecial -4163
+
+call Errorhandler()
+
+	If Err.Number <> 0 Then
+   
+ 	 	Error = "Error number " & Err.Number & ", " & _
+  		Err.Description & ", has occurred"
+  		Err.Clear
+		WScript.StdOut.write(Error)
+			
+	End If
+
+ wbDest.save
+    wbSource.Save
+    wbDest.Close 
+    wbSource.Close 
+    appXL.Quit
+    
+   Set appXL = Nothing
+    Set wbSource = Nothing
+    Set wksSource = Nothing
+    Set wbDest = Nothing
+    Set wksDest = Nothing
+    WScript.Quit
